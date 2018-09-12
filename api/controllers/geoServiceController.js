@@ -3,7 +3,6 @@ exports.getUtcOffset = function(req, res) {
 
   // Collect placeID parameter
   var placeID = req.query.placeID;
-  console.log('placeID: ' + placeID);
 
   // Prepare to make http request to Google server...
   var https = require('https');
@@ -15,7 +14,7 @@ exports.getUtcOffset = function(req, res) {
   var options = {
     hostname: 'maps.googleapis.com',
     port: 443,
-    path: '/maps/api/place/details/json?placeid=' + querystring.escape(placeID) + '&fields=utc_offset&key=' + GOOGLE_API_KEY,
+    path: '/maps/api/place/details/json?placeid=' + querystring.escape(placeID) + '&fields=utc_offset,formatted_address&key=' + GOOGLE_API_KEY,
     method: 'GET',
     headers: {}
   };
@@ -28,6 +27,7 @@ exports.getUtcOffset = function(req, res) {
     // The whole response has been received.
     googleRes.on('end', () => {
       // Send data to client
+      console.log('User logged on from: ' + JSON.parse(data).result.formatted_address);
       return res.status(200).send(data);
     });
   })

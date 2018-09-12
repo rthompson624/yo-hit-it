@@ -16,4 +16,5 @@ export interface PlaceDetailResponse {
 
 export interface PlaceDetail {
   utc_offset: number;
+  formatted_address: string;
 }

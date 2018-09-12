@@ -39,7 +39,7 @@ export class HttpService {
     return this.http.get<PlaceDetailResponse>(url, {params: httpParams, responseType: 'json'})
     .pipe(
       catchError(this.handleError('getUtcOffset', 
-        {"html_attributions": [], "result": {"utc_offset": 0}, "status": "error"}))
+        {"html_attributions": [], "result": {"utc_offset": 0, "formatted_address": ''}, "status": "error"}))
     );
   }
 
