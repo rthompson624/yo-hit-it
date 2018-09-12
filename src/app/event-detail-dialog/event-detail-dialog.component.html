@@ -1,0 +1,49 @@
+<h3 mat-dialog-title>{{event.Name}}</h3>
+
+<mat-dialog-content>
+  <div style="overflow:auto;">
+    <div style="float:left;">
+      <h4 class="space-above">{{formatDate(convertCitySparkDate(event.DateStart))}}</h4>
+      <h4>{{formatTimePeriod()}}</h4>
+    </div>
+    <div style="float:left;padding-left:10px;" class="space-above">
+      <a target="_blank" href="{{formatGoogleCalendarLink()}}"><mat-icon>calendar_today</mat-icon></a>
+    </div>
+  </div>
+  <h4 style="clear:left;" class="space-above"><a target="_blank" href="https://maps.google.com?daddr={{encodeURL(event.Address + ', ' + event.CityState)}}">{{event.Venue}}</a></h4>
+  <h5>{{event.Address}}</h5>
+  <h5>{{event.CityState}} {{event.Zip}}</h5>
+  <div class="space-above event-detail" *ngIf="event.Price || event.Free || event.PriceText || event.PriceHigh">
+    <span style="font-weight: 600;">Price:&nbsp;</span>
+    <span *ngIf="(event.Price || event.PriceHigh) && !event.Free">${{event.Price}}</span>
+    <span *ngIf="event.PriceHigh && event.Price != event.PriceHigh"> to ${{event.PriceHigh}}</span>
+    <span *ngIf="event.Free">Free</span>
+    <span *ngIf="event.PriceText && (event.Price || event.Free)"> - {{event.PriceText}}</span>
+  </div>
+  <mat-divider class="space-above"></mat-divider>
+  <div class="space-above event-detail" [innerHTML]="formatMultiline(cleanText(event.Description))"></div>
+  <mat-divider class="space-above"></mat-divider>
+  <ng-container *ngIf="event.ct">
+    <h5 class="space-above" style="font-weight: 600;">Contact</h5>
+    <h5 *ngIf="event.ct.name">{{event.ct.name}}</h5>
+    <h5 *ngIf="event.ct.org">{{event.ct.org}}</h5>
+    <h5 *ngIf="event.ct.email"><a href="mailto:{{event.ct.email}}">{{event.ct.email}}</a></h5>
+    <h5 *ngIf="event.ct.phone"><a href="tel:{{event.ct.phone}}">{{event.ct.phone}}</a></h5>
+  </ng-container>
+  <ng-container *ngIf="event.Tickets.length > 0">
+    <h5 class="space-above" style="font-weight: 600;">Tickets / Registration</h5>
+    <h5 *ngFor="let link of event.Tickets"><a href="{{replaceNull(link.url)}}" target="_blank">{{formatLinkText(link.name, link.url)}}</a></h5>
+  </ng-container>
+  <ng-container *ngIf="event.Links.length > 0">
+    <h5 class="space-above" style="font-weight: 600;">More Info</h5>
+    <h5 *ngFor="let link of event.Links"><a href="{{replaceNull(link.url)}}" target="_blank">{{formatLinkText(link.name, link.url)}}</a></h5>
+  </ng-container>
+  <ng-container *ngIf="event.Sponsor">
+    <h5 class="space-above" style="font-weight: 600;">Sponsored by</h5>
+    <h5><a href="{{replaceNull(event.Sponsor.url)}}" target="_blank">{{formatLinkText(event.Sponsor.name, event.Sponsor.url)}}</a></h5>
+  </ng-container>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button class="mat-raised-button mat-primary" (click)="onClickClose()">Close</button>
+</mat-dialog-actions>

@@ -1,0 +1,22 @@
+.icon-left {
+  padding: 0px 12px 0px 0px;
+}
+
+.icon-right {
+  padding: 0px 0px 0px 18px;
+}
+
+.selected {
+  color: gold;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+#app-header {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 7px;
+  z-index: 500;
+}

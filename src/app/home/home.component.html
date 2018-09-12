@@ -1,0 +1,80 @@
+<div id="search-toolbar">
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="searchPanelExpanded" (opened)="searchPanelExpanded = true;">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{formatDate(date)}}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{location.address}} ({{radius}} mi) <br>{{getCategoryName(selectedCategory)}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-grid-list cols="2" rowHeight="5em" gutterSize="10px">
+        <mat-grid-tile class="align-left">
+          <mat-form-field class="short-field">
+            <input matInput placeholder="Date" [matDatepicker]="picker" [(ngModel)]="date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile class="align-left">
+          <mat-form-field class="short-field">
+            <input matInput placeholder="Location" [(ngModel)]="location.address" (change)="locationChanged = true;">
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile class="align-left">
+          <mat-form-field class="short-field">
+            <mat-select placeholder="Search Radius" [(value)]="radius">
+              <mat-option value="1">1 mile</mat-option>
+              <mat-option value="3">3 miles</mat-option>
+              <mat-option value="5">5 miles</mat-option>
+              <mat-option value="10">10 miles</mat-option>
+              <mat-option value="25">25 miles</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile class="align-left">
+          <mat-form-field class="short-field">
+            <mat-select placeholder="Categories" [(value)]="selectedCategory">
+              <mat-option *ngFor="let category of categories" [value]="category.id">
+                <!-- Had to use svgIcon style otherwise select box displays inner text upon selection. -->
+                <mat-icon *ngIf="category.id != ''" svgIcon="{{getEventIcon(parseStringToNumber(category.id))}}"></mat-icon>
+                {{category.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
+      </mat-grid-list>
+      <mat-action-row>
+        <button mat-raised-button color="primary" (click)="onClickSearch()">Search</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<div *ngIf="showSpinner" class="spinner-container">
+  <mat-spinner [diameter]="45" [strokeWidth]="5"></mat-spinner>
+</div>
+
+<div [hidden]="showSpinner || dataView != 'list'" id="results-table">
+  <mat-list>
+    <mat-list-item *ngFor="let event of events" (click)="onClickEvent(event)">
+      <mat-icon *ngFor="let tag of event.Tags" matListIcon>{{getEventIcon(tag)}}</mat-icon>
+      <h3 matLine>
+        {{event.Name}}
+      </h3>
+      <p matLine style="color:gray;">
+        {{formatTime(convertCitySparkDate(event.DateStart))}} | {{event.Venue}}
+      </p>
+    </mat-list-item>
+  </mat-list>
+</div>
+
+<div [hidden]="showSpinner || dataView != 'map'" class='map-container'>
+  <agm-map [(latitude)]="location.lat" [(longitude)]="location.lng" [(zoom)]="location.zoom">
+    <agm-marker *ngFor="let event of events" [latitude]="event.latitude" [longitude]="event.longitude" (markerClick)="onClickEvent(event)"></agm-marker>
+    <agm-marker *ngFor="let location of userLocation" [latitude]="location.lat" [longitude]="location.lng" [iconUrl]="'assets/map-markers/user.png'"></agm-marker>
+  </agm-map>
+</div>
+
+<div #dummyDiv></div>
