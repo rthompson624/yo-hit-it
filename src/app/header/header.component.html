@@ -1,11 +1,9 @@
-<div style="overflow:auto;" id="app-header">
-  <mat-toolbar class="sticky-toolbar" color="primary">
-    <mat-toolbar-row>
-      <mat-icon class="icon-left" (click)="onClickMapView()">alarm_add</mat-icon>
-      Yo, hit it
-      <span class="toolbar-spacer"></span>
-      <mat-icon class="icon-right" [class.selected]="listView" (click)="onClickListView()">list</mat-icon>
-      <mat-icon class="icon-right" [class.selected]="!listView" (click)="onClickMapView()">place</mat-icon>
-    </mat-toolbar-row>
-  </mat-toolbar>  
-</div>
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <mat-icon class="icon-left" (click)="onClickMapView()">alarm_add</mat-icon>
+    Yo, hit it
+    <span class="toolbar-spacer"></span>
+    <mat-icon class="icon-right" [class.selected]="listView" (click)="onClickListView()">list</mat-icon>
+    <mat-icon class="icon-right" [class.selected]="!listView" (click)="onClickMapView()">place</mat-icon>
+  </mat-toolbar-row>
+</mat-toolbar>  
