@@ -206,22 +206,27 @@ export class HomeComponent implements OnInit {
   }
 
   parseCityState(results: any): string {
+    // console.log(results);
     const result = results.find(
       (result) => result.types.find(
-        (type) => type === 'street_address'
+        (type) => type === 'street_address' || type === 'locality'
       )
     );
-    const city = result.address_components.find(
-      (address_component) => address_component.types.find(
-        (type) => type === 'locality'
-      )
-    ).short_name;
-    const state = result.address_components.find(
-      (address_component) => address_component.types.find(
-        (type) => type === 'administrative_area_level_1'
-      )
-    ).short_name;
-    return city + ', ' + state;
+    if (result) {
+      const city = result.address_components.find(
+        (address_component) => address_component.types.find(
+          (type) => type === 'locality'
+        )
+      ).short_name;
+      const state = result.address_components.find(
+        (address_component) => address_component.types.find(
+          (type) => type === 'administrative_area_level_1'
+        )
+      ).short_name;
+      return city + ', ' + state;
+    } else {
+      return null;
+    }
   }
 
   updateMapLocation(address: string): void {
@@ -238,14 +243,23 @@ export class HomeComponent implements OnInit {
             this.location.lat = results[0].geometry.location.lat();
             this.location.lng = results[0].geometry.location.lng();
             this.location.placeID = results[0].place_id;
-            this.getEventsLocationUtcOffset();
-            this.locationChanged = false;
-            this.searchPanelExpanded = false;
-            this.reloadEvents();
+            let retVal = this.parseCityState(results);
+            if (retVal) {
+              this.location.address = retVal;
+              this.getEventsLocationUtcOffset();
+              this.locationChanged = false;
+              this.searchPanelExpanded = false;
+              this.reloadEvents();
+            } else {
+              this.locationChanged = false;
+              this.showSpinner = false;
+              this.openAlertDialog('Say What?', 'We did not recognize that place. Please enter location as CITY, ST (eg. Boulder, CO).');
+            }
           });
         }
       } else {
         this.zone.run(() => {
+          this.locationChanged = false;
           this.showSpinner = false;
           this.openAlertDialog('Say What?', 'We did not recognize that place. Please enter location as CITY, ST (like Boulder, CO).');
         });
