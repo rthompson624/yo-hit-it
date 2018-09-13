@@ -25,5 +25,12 @@
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 7px;
-  z-index: 500;
+  z-index: 501;
+}
+
+::ng-deep .mat-toolbar{
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 7px;
+  z-index: 502;
 }
