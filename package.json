@@ -8,15 +8,18 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "ng build --output-path dist/boulder-now"
   },
   "private": true,
   "dependencies": {
     "@agm/core": "^1.0.0-beta.3",
     "@angular/animations": "^6.1.7",
     "@angular/cdk": "^6.4.7",
+    "@angular/cli": "^6.2.1",
     "@angular/common": "^6.1.7",
     "@angular/compiler": "^6.1.7",
+    "@angular/compiler-cli": "^6.1.7",
     "@angular/core": "^6.1.7",
     "@angular/forms": "^6.1.7",
     "@angular/http": "^6.1.7",
@@ -33,8 +36,6 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.7.0",
-    "@angular/cli": "^6.2.1",
-    "@angular/compiler-cli": "^6.1.7",
     "@angular/language-service": "^6.1.7",
     "@types/googlemaps": "^3.30.13",
     "@types/jasmine": "~2.8.6",
