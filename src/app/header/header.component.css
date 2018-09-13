@@ -20,3 +20,10 @@
   top: 7px;
   z-index: 500;
 }
+
+.sticky-toolbar {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 7px;
+  z-index: 500;
+}
