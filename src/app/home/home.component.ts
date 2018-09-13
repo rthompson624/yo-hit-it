@@ -468,8 +468,17 @@ export class HomeComponent implements OnInit {
 
   // CitySpark returns dates in GMT notation, but they are really local time
   convertCitySparkDate(dateString: string): Date {
+    // 2018-09-06T08:00:00Z
+    // 01234567890123456789
     if (dateString) {
-      return new Date(dateString.replace('Z', ''));
+      let date = new Date(dateString);
+      let hours = parseInt(dateString.substr(11, 2));
+      let minutes = parseInt(dateString.substr(14, 2));
+      let seconds = parseInt(dateString.substr(17, 2));
+      date.setHours(hours);
+      date.setMinutes(minutes);
+      date.setSeconds(seconds);
+      return date;
     } else {
       return null;
     }
