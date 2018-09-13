@@ -1,8 +1,9 @@
 exports.getUtcOffset = function(req, res) {
   const GOOGLE_API_KEY = 'AIzaSyA_3IweBHQAauD_DTlS3-k22vYHnFB5Q5Y';
 
-  // Collect placeID parameter
+  // Collect parameters
   var placeID = req.query.placeID;
+  var requestSource = req.query.requestSource;
 
   // Prepare to make http request to Google server...
   var https = require('https');
@@ -27,7 +28,11 @@ exports.getUtcOffset = function(req, res) {
     // The whole response has been received.
     googleRes.on('end', () => {
       // Send data to client
-      console.log('User logged on from: ' + JSON.parse(data).result.formatted_address);
+      if (requestSource === 'user') {
+        console.log('User logged on from: ' + JSON.parse(data).result.formatted_address);
+      } else {
+        console.log('Searched events in: ' + JSON.parse(data).result.formatted_address);
+      }
       return res.status(200).send(data);
     });
   })

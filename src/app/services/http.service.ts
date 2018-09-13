@@ -33,9 +33,11 @@ export class HttpService {
     );
   }
 
-  getUtcOffset(placeID: string): Observable<PlaceDetailResponse> {
+  getUtcOffset(placeID: string, requestSource: string): Observable<PlaceDetailResponse> {
     let url = environment.google.domain + environment.google.api.geoService.getUtcOffset;
-    let httpParams = new HttpParams().set('placeID', placeID);
+    let httpParams = new HttpParams()
+      .set('placeID', placeID)
+      .set('requestSource', requestSource);
     return this.http.get<PlaceDetailResponse>(url, {params: httpParams, responseType: 'json'})
     .pipe(
       catchError(this.handleError('getUtcOffset', 

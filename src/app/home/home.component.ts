@@ -187,7 +187,7 @@ export class HomeComponent implements OnInit {
   }
 
   getUserLocationUtcOffset(): void {
-    this.httpService.getUtcOffset(this.userLocation[0].placeID).toPromise().then((response: PlaceDetailResponse) => {
+    this.httpService.getUtcOffset(this.userLocation[0].placeID, 'user').toPromise().then((response: PlaceDetailResponse) => {
       if (response.status === 'OK') {
         this.location.utcOffset = response.result.utc_offset;
         this.userLocation[0].utcOffset = response.result.utc_offset;
@@ -197,7 +197,7 @@ export class HomeComponent implements OnInit {
   }
 
   getEventsLocationUtcOffset(): void {
-    this.httpService.getUtcOffset(this.location.placeID).toPromise().then((response) => {
+    this.httpService.getUtcOffset(this.location.placeID, 'events').toPromise().then((response) => {
       if (response.status === 'OK') {
         this.location.utcOffset = response.result.utc_offset;
         // console.log('Events Utc Offset: ' + response.result.utc_offset);
