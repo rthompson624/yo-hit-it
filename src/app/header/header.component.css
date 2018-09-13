@@ -15,8 +15,8 @@
 }
 
 .sticky-toolbar {
-  display: flex;
-  align-items: center;
+  /* display: flex; */
+  /* align-items: center; */
   height: 50px;
   position: -webkit-sticky; /* Safari */
   position: sticky;
