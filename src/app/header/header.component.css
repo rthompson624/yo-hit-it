@@ -35,3 +35,10 @@
   line-height: 32px;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.sticky-test {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 7px;
+  z-index: 501;
+}
