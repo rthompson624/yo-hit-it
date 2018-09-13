@@ -49,15 +49,27 @@ agm-map {
   height: 430px;
 }
 
-@media screen and (min-width: 700px) {
+@media screen and (min-height: 700px) {
   agm-map {
-    height: 600px;
+    height: 500px;
   }
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-height: 800px) {
   agm-map {
-    height: 800px;
+    height: 550px;
+  }
+}
+
+@media screen and (min-height: 1000px) {
+  agm-map {
+    height: 750px;
+  }
+}
+
+@media screen and (min-height: 1300px) {
+  agm-map {
+    height: 900px;
   }
 }
 
