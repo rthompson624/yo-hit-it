@@ -37,7 +37,7 @@ th.align-right {
 #search-toolbar {
   position: -webkit-sticky; /* Safari */
   position: sticky;
-  top: 60px;
+  top: 57px;
   z-index: 500;
 }
 
