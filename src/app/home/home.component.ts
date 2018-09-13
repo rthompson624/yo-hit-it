@@ -108,7 +108,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.headerEventBroadcastService.dataViewChange.subscribe(dataView => this.dataView = dataView);
     this.date = new Date(this.date.toDateString());
     this.showSpinner = true;
     this.getUserLocation();
@@ -127,6 +126,14 @@ export class HomeComponent implements OnInit {
 
   onClickEvent(event: CitySparkEvent): void {
     this.openEventDialog(event);
+  }
+
+  onClickListView(): void {
+    this.dataView = 'list';
+  }
+
+  onClickMapView(): void {
+    this.dataView = 'map';
   }
   
   openEventDialog(event: CitySparkEvent): void {

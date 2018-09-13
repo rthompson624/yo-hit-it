@@ -54,3 +54,41 @@ agm-map {
   border-style: solid;
   border-width: 2px;
 }
+
+.icon-left {
+  padding: 0px 15px 0px 15px;
+}
+
+.icon-right {
+  padding: 0px 15px 0px 5px;
+}
+
+.selected {
+  color: gold;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.sticky-toolbar {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 7px;
+  z-index: 501;
+  background: #673ab7;
+  color: white;
+  font-style: normal;
+  font-variant-ligatures: normal;
+  font-variant-caps: normal;
+  font-variant-numeric: normal;
+  font-variant-east-asian: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-size: 20px;
+  line-height: 32px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

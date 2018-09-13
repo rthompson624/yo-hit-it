@@ -15,8 +15,8 @@
 }
 
 .sticky-toolbar {
-  /* display: flex; */
-  /* align-items: center; */
+  display: flex;
+  align-items: center;
   height: 50px;
   position: -webkit-sticky; /* Safari */
   position: sticky;
@@ -34,11 +34,4 @@
   font-size: 20px;
   line-height: 32px;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-.sticky-test {
-  position: -webkit-sticky; /* Safari */
-  position: sticky;
-  top: 7px;
-  z-index: 501;
 }
