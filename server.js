@@ -5,6 +5,18 @@ var app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
+// Redirect http to https in production only
+var env = process.env.NODE_ENV;
+if (env === 'production') {
+  app.use(function (req, res, next) {
+    if (req.headers['x-forwarded-proto'] != 'https') {
+      res.redirect(301, 'https://' + req.headers.host + req.url);
+    } else {
+      return next();
+    }
+  });
+}
+
 // Create link to Angular build directory
 var distDir = __dirname + "/dist/boulder-now/";
 app.use(express.static(distDir));
