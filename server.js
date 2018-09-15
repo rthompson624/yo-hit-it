@@ -26,6 +26,8 @@ var eventRoutes = require('./api/routes/eventRoutes');
 eventRoutes(app);
 var geoServiceRoutes = require('./api/routes/geoServiceRoutes');
 geoServiceRoutes(app);
+var applicationRoutes = require('./api/routes/applicationRoutes');
+applicationRoutes(app);
 
 // Initialize the app.
 var server = app.listen(process.env.PORT || 4200, () => {

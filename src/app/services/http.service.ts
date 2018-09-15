@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { CategoryDefJSON, EventsRequestBody, CitySparkEvents } from '../definitions/events';
 import { PlaceDetailResponse } from '../definitions/google-maps';
+import { ApplicationEvent } from '../definitions/application';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,15 @@ export class HttpService {
     .pipe(
       catchError(this.handleError('getUtcOffset', 
         {"html_attributions": [], "result": {"utc_offset": 0, "formatted_address": ''}, "status": "error"}))
+    );
+  }
+
+  sendApplicationLog(log: ApplicationEvent[]): Observable<Object> {
+    let url = '/api/sendApplicationLog';
+    let httpParams = new HttpParams().set('applog', JSON.stringify({"log": log}));
+    return this.http.get<Object>(url, {params: httpParams, responseType: 'json'})
+    .pipe(
+      catchError(this.handleError('sendApplicationLog', 'OK'))
     );
   }
 

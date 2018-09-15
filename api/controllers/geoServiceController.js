@@ -1,3 +1,11 @@
+'use strict';
+
+// Generic error handler
+function handleError(res, reason, message) {
+  console.log('ERROR: ' + reason);
+  res.status(500).json({'error': message});
+}
+
 exports.getUtcOffset = function(req, res) {
   const GOOGLE_API_KEY = 'AIzaSyA_3IweBHQAauD_DTlS3-k22vYHnFB5Q5Y';
 

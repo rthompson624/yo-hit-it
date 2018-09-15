@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 import { HttpService } from '../services/http.service';
 import { environment } from '../../environments/environment';
+import { ApplicationEventCategory, ApplicationEvent } from '../definitions/application';
 import { EventCategory, CitySparkEvent } from '../definitions/events';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { EventDetailDialogComponent } from '../event-detail-dialog/event-detail-dialog.component';
@@ -41,6 +42,8 @@ export class HomeComponent implements OnInit {
     zoom: 11
   };
   userLocation: Location[] = [];
+  eventLog: ApplicationEvent[] = [];
+  initializationFinished: boolean = false;
   @ViewChild(AgmMap) map: AgmMap; // Needed for Angular Google Maps
 
   constructor(
@@ -59,6 +62,12 @@ export class HomeComponent implements OnInit {
     this.wrapper = wrapper;
     this.mapsApiLoader.load().then(() => {
       this.geocoder = new google.maps.Geocoder();
+      this.eventLog.push(<ApplicationEvent>{
+        date: new Date(), 
+        category: ApplicationEventCategory.initialization, 
+        function: 'HomeComponent::constructor()', 
+        message: 'mapsApiLoader.load() succeeded'
+      });
     });
     // Initialize icons
     iconRegistry.addSvgIcon(
@@ -110,8 +119,8 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.date = new Date(this.date.toDateString());
     this.showSpinner = true;
-    this.getUserLocation();
     this.loadEventCategories();
+    this.getUserLocation();
   }
   
   onClickSearch(): void {
@@ -154,23 +163,55 @@ export class HomeComponent implements OnInit {
 
   getUserLocation(): void {
     if (navigator.geolocation) {
+      this.eventLog.push(<ApplicationEvent>{
+        date: new Date(), 
+        category: ApplicationEventCategory.initialization, 
+        function: 'HomeComponent::getUserLocation()', 
+        message: 'Attempting to acquire user location'
+      });
       navigator.geolocation.getCurrentPosition((position) => {
         this.location.lat = position.coords.latitude;
         this.location.lng = position.coords.longitude;
         this.userLocation.length = 0;
         this.userLocation.push({lat: position.coords.latitude, lng: position.coords.longitude});
+        this.eventLog.push(<ApplicationEvent>{
+          date: new Date(), 
+          category: ApplicationEventCategory.initialization, 
+          function: 'HomeComponent::getUserLocation()', 
+          message: 'User location was acquired'
+        });
         this.geocodeLatLng();
         this.reloadEvents();
       });
     } else {
+      this.eventLog.push(<ApplicationEvent>{
+        date: new Date(), 
+        category: ApplicationEventCategory.initialization, 
+        function: 'HomeComponent::getUserLocation()', 
+        message: 'navigator.geolocation returned false'
+      });
       this.reloadEvents();
       this.openAlertDialog('Where You Be?', 'Geolocation is not supported by your browser. Please enter your location manually.');
     }
   }
 
   geocodeLatLng(): void {
-    if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
+    if (!this.geocoder) {
+      this.eventLog.push(<ApplicationEvent>{
+        date: new Date(), 
+        category: ApplicationEventCategory.initialization, 
+        function: 'HomeComponent::geocodeLatLng()', 
+        message: 'geocoder was null'
+      });
+      this.geocoder = new google.maps.Geocoder();
+    }
     const latlng = {lat: this.location.lat, lng: this.location.lng};
+    this.eventLog.push(<ApplicationEvent>{
+      date: new Date(), 
+      category: ApplicationEventCategory.initialization, 
+      function: 'HomeComponent::geocodeLatLng()', 
+      message: 'latlng.lat = ' + latlng.lat + 'latlng.lng = ' + latlng.lng
+    });
     this.geocoder.geocode({'location': latlng}, (results, status) => {
       if (status == google.maps.GeocoderStatus.OK) {
         if (results[0]) {
@@ -182,12 +223,24 @@ export class HomeComponent implements OnInit {
             this.location.placeID = results[0].place_id;
             this.userLocation[0].address = this.location.address;
             this.userLocation[0].placeID = this.location.placeID;
+            this.eventLog.push(<ApplicationEvent>{
+              date: new Date(), 
+              category: ApplicationEventCategory.initialization, 
+              function: 'HomeComponent::geocodeLatLng()', 
+              message: 'User city is ' + this.location.address
+            });
             this.getUserLocationUtcOffset();
           });
         }
       } else {
         this.zone.run(() => {
           this.openAlertDialog('Whoops', 'We could not identify your city name, but we were able to locate you, so events within your radius will display.');
+          this.eventLog.push(<ApplicationEvent>{
+            date: new Date(), 
+            category: ApplicationEventCategory.initialization, 
+            function: 'HomeComponent::geocodeLatLng()', 
+            message: 'City could not be indentified. status = ' + status
+          });
         });
       }
     });
@@ -198,6 +251,12 @@ export class HomeComponent implements OnInit {
       if (response.status === 'OK') {
         this.location.utcOffset = response.result.utc_offset;
         this.userLocation[0].utcOffset = response.result.utc_offset;
+        this.eventLog.push(<ApplicationEvent>{
+          date: new Date(), 
+          category: ApplicationEventCategory.initialization, 
+          function: 'HomeComponent::getUserLocationUtcOffset()', 
+          message: 'User Utc offset is ' + this.location.utcOffset
+        });
         // console.log('User & events Utc Offset: ' + response.result.utc_offset);
       }
     });
@@ -392,6 +451,15 @@ export class HomeComponent implements OnInit {
         this.events = this.events.concat(this.trimFutureEvents(this.trimLapsedEvents(json.events)));
         this.trimEventTags();
         this.showSpinner = false;
+        if (!this.initializationFinished) {
+          this.initializationFinished = true;
+          this.eventLog.push(<ApplicationEvent>{
+            date: new Date(), 
+            category: ApplicationEventCategory.initialization, 
+            function: 'HomeComponent::loadEvents()', 
+            message: 'Events loaded successfully'
+          });
+        }
         // console.log(this.events);
       } else {
         this.events = this.events.concat(this.trimLapsedEvents(json.events));
@@ -482,6 +550,15 @@ export class HomeComponent implements OnInit {
     } else {
       return null;
     }
+  }
+
+  onSpinnerClick(): void {
+    console.log('Print event log:');
+    console.log(this.eventLog);
+    this.httpService.sendApplicationLog(this.eventLog).toPromise().then((json) => {
+      console.log('Event log sent to server. Server response:');
+      console.log(json);
+    });
   }
 
 }

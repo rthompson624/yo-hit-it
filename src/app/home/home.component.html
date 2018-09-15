@@ -62,7 +62,7 @@
 </div>
 
 <div *ngIf="showSpinner" class="spinner-container">
-  <mat-spinner [diameter]="45" [strokeWidth]="5"></mat-spinner>
+  <mat-spinner [diameter]="45" [strokeWidth]="5" (click)="onSpinnerClick()"></mat-spinner>
 </div>
 
 <div [hidden]="showSpinner || dataView != 'list'" id="results-table">
