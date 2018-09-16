@@ -1,0 +1,6 @@
+0.0.0
+- Initial release
+
+0.0.1
+[BG-11]
+- Fix load issue where first time page visit sometimes gets spinner and never loads events until page is refreshed.

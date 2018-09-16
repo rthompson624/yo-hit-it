@@ -1,6 +1,7 @@
 export enum ApplicationEventCategory {
   initialization = 'INITIALIZATION',
-  error = 'ERROR'
+  error = 'ERROR',
+  userAction = 'USER_ACTION'
 }
 
 export interface ApplicationEvent {
